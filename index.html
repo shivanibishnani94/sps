@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>School Election 2025</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .selected {
+      border: 4px solid #4F46E5;
+      box-shadow: 0 0 15px rgba(79, 70, 229, 0.6);
+      transform: scale(1.02);
+      transition: all 0.3s ease;
+    }
+    .candidate-card-logo {
+      width: 60px;
+      height: 60px;
+      margin-right: 0.5rem;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="max-w-7xl mx-auto py-10 px-4">
+    <h1 class="text-4xl font-bold text-center text-purple-700 mb-2">School Election 2025</h1>
+    <p class="text-center text-lg mb-8">Cast your vote for school leadership positions</p>
+
+    <!-- Step 1: School Captain -->
+    <div id="step1">
+      <h2 class="text-2xl font-semibold text-center mb-6">Select School Captain</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div onclick="selectCandidate('schoolCaptain', this, 'Sai Khubalkar')" class="card-default cursor-pointer bg-white rounded-xl p-6 text-center">
+          <img src="images/c1.png" class="w-full h-60 object-contain rounded-xl mb-4" alt="Sai Khubalkar" />
+          <h3 class="font-bold text-lg"><img src="images/wings.jpg" class="candidate-card-logo" />Sai Khubalkar</h3>
+          <p class="text-sm italic">“Academic excellence”</p>
+        </div>
+        <div onclick="selectCandidate('schoolCaptain', this, 'Bhoriyan Thakare')" class="card-default cursor-pointer bg-white rounded-xl p-6 text-center">
+          <img src="images/c2.png" class="w-full h-60 object-contain rounded-xl mb-4" alt="Bhoriyan Thakare" />
+          <h3 class="font-bold text-lg"><img src="images/book.jpg" class="candidate-card-logo" />Bhoriyan Thakare</h3>
+          <p class="text-sm italic">“Holistic development”</p>
+        </div>
+        <div onclick="selectCandidate('schoolCaptain', this, 'Vamika Soni')" class="card-default cursor-pointer bg-white rounded-xl p-6 text-center">
+          <img src="images/c3.png" class="w-full h-60 object-contain rounded-xl mb-4" alt="Vamika Soni" />
+          <h3 class="font-bold text-lg"><img src="images/Trophy.png" class="candidate-card-logo" />Vamika Soni</h3>
+          <p class="text-sm italic">“Sports promotion”</p>
+        </div>
+        <div onclick="selectCandidate('schoolCaptain', this, 'Konark Dhonge')" class="card-default cursor-pointer bg-white rounded-xl p-6 text-center">
+          <img src="images/c4.png" class="w-full h-60 object-contain rounded-xl mb-4" alt="Konark Dhonge" />
+          <h3 class="font-bold text-lg"><img src="images/Torch.png" class="candidate-card-logo" />Konark Dhonge</h3>
+          <p class="text-sm italic">“Inclusivity & culture”</p>
+        </div>
+      </div>
+      <div class="text-center mt-8">
+        <button onclick="nextStep(1)" class="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2 rounded">Next → Choose House</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Select House -->
+    <div id="step2" class="hidden">
+      <h2 class="text-2xl font-semibold text-center mb-6">Select Your House</h2>
+      <div class="grid grid-cols-2 gap-6 max-w-xl mx-auto">
+        <div onclick="selectHouse(this, 'Red House')" class="cursor-pointer p-6 bg-red-100 rounded-lg text-center border border-red-300 font-bold text-red-700">Red House</div>
+        <div onclick="selectHouse(this, 'Blue House')" class="cursor-pointer p-6 bg-blue-100 rounded-lg text-center border border-blue-300 font-bold text-blue-700">Blue House</div>
+        <div onclick="selectHouse(this, 'Green House')" class="cursor-pointer p-6 bg-green-100 rounded-lg text-center border border-green-300 font-bold text-green-700">Green House</div>
+        <div onclick="selectHouse(this, 'Yellow House')" class="cursor-pointer p-6 bg-yellow-100 rounded-lg text-center border border-yellow-300 font-bold text-yellow-700">Yellow House</div>
+      </div>
+      <div class="text-center mt-8">
+        <button onclick="nextStep(2); updateHouseCandidates();" class="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2 rounded">Next → Choose House Captain</button>
+      </div>
+    </div>
+
+    <!-- Step 3: House Captain -->
+    <div id="step3" class="hidden">
+      <h2 class="text-2xl font-semibold text-center mb-6" id="houseTitle">House Captain Candidates</h2>
+      <div id="houseCandidates" class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center"></div>
+      <div class="text-center mt-8">
+        <button onclick="submitVotes()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">Submit Votes</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Submission -->
+    <div id="step4" class="hidden mt-10 text-center">
+      <div class="bg-white p-6 rounded shadow-md max-w-xl mx-auto">
+        <div class="text-green-500 text-4xl mb-4">✔️</div>
+        <h2 class="text-2xl font-semibold mb-2">Votes Submitted!</h2>
+        <p class="mb-4">Thank you for participating. Your choices are listed below.</p>
+        <div id="summary" class="mb-6 text-left inline-block"></div>
+        <div class="flex flex-col items-center space-y-4 mt-6">
+          <button onclick="downloadCSV()" class="bg-purple-700 text-white px-6 py-2 rounded">Download All Votes (CSV)</button>
+          <button onclick="restart()" class="bg-gray-700 text-white px-6 py-2 rounded">Cast Another Vote</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const votes = [];
+    let currentVote = {};
+
+    const houseData = {
+      "Red House": [
+        { name: "Veer Raut", img: "images/r1.png", vision: "Discipline & spirit" },
+        { name: "Ram Badwaik", img: "images/r2.png", vision: "Team building" },
+        { name: "Safal Kakde", img: "images/r3.png", vision: "Academic focus" }
+      ],
+      "Blue House": [
+        { name: "Shreyansh Khandalkar", img: "images/b1.png", vision: "House spirit" },
+        { name: "Abhas Talmale", img: "images/b2.png", vision: "Sports excellence" },
+        { name: "Nawanshu Sonbarse", img: "images/b3.png", vision: "Academic leadership" }
+      ],
+      "Green House": [
+        { name: "Aslesha Bondre", img: "images/g1.png", vision: "Environmental awareness" },
+        { name: "Seeddhanti Motghare", img: "images/g2.png", vision: "Leadership through service" },
+        { name: "Bhrunal Bele", img: "images/g3.png", vision: "Integrity & fairness" }
+      ],
+      "Yellow House": [
+        { name: "Chirag Raut", img: "images/y1.png", vision: "Cultural enthusiasm" },
+        { name: "Priyanshi Wadibhasme", img: "images/y2.png", vision: "Sportsmanship" },
+        { name: "Yashaswi Choudhari", img: "images/y3.png", vision: "Academic innovation" }
+      ]
+    };
+
+    function selectCandidate(role, element, candidate) {
+      currentVote[role] = candidate;
+      document.querySelectorAll(`#step${role === 'schoolCaptain' ? 1 : 3} .selected`).forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function selectHouse(element, house) {
+      currentVote.house = house;
+      document.querySelectorAll('#step2 .selected').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      document.getElementById('houseTitle').textContent = `${house} Captain Candidates`;
+    }
+
+    function nextStep(step) {
+      document.getElementById(`step${step}`).classList.add('hidden');
+      document.getElementById(`step${step + 1}`).classList.remove('hidden');
+    }
+
+    function updateHouseCandidates() {
+      const house = currentVote.house;
+      const container = document.getElementById('houseCandidates');
+      container.innerHTML = '';
+      houseData[house].forEach(candidate => {
+        const card = document.createElement('div');
+        card.className = 'card-default cursor-pointer bg-white rounded-xl p-6 text-center';
+        card.onclick = () => selectCandidate('houseCaptain', card, candidate.name);
+        card.innerHTML = `
+          <img src="${candidate.img}" alt="${candidate.name}" class="w-full h-60 object-contain rounded-xl mb-4" />
+          <h3 class="font-bold text-lg">${candidate.name}</h3>
+          <p class="text-sm italic">“${candidate.vision}”</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function submitVotes() {
+      document.getElementById('step3').classList.add('hidden');
+      document.getElementById('step4').classList.remove('hidden');
+      document.getElementById('summary').innerHTML = `
+        <p><strong>School Captain:</strong> ${currentVote.schoolCaptain}</p>
+        <p><strong>${currentVote.house}:</strong> ${currentVote.houseCaptain}</p>
+      `;
+      votes.push(currentVote);
+      currentVote = {};
+    }
+
+    function downloadCSV() {
+      const counts = {};
+      for (let vote of votes) {
+        for (let key in vote) {
+          const entry = `${key} - ${vote[key]}`;
+          counts[entry] = (counts[entry] || 0) + 1;
+        }
+      }
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      let csvContent = "data:text/csv;charset=utf-8,Role - Candidate,Vote Count\n" +
+        sorted.map(e => `${e[0]},${e[1]}`).join("\n");
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "election_results.csv");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function restart() {
+      document.getElementById('step4').classList.add('hidden');
+      document.getElementById('step1').classList.remove('hidden');
+      document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+    }
+  </script>
+</body>
+</html>
